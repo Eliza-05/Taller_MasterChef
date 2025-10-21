@@ -56,6 +56,7 @@ La API debe permitir:
 
 ## Arquitectura del Proyecto
 
+```text
 📁 src/main/java/edu/dosw/taller/
 │
 ├── 📁 controller/        # 🌐 Controladores REST (manejo de endpoints)
@@ -64,6 +65,7 @@ La API debe permitir:
 ├── 📁 services/          # 🔧 Lógica de negocio
 ├── 📁 configs/           # ⚙️ Configuraciones globales (Swagger, CORS)
 └── 📄 Application.java   # 🚀 Clase principal de Spring Boot
+```
 
 --- 
 
