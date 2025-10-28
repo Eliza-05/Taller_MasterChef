@@ -1,4 +1,4 @@
-package edu.dosw.taller.model.components.util;
+package edu.dosw.taller.controller.dtos;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;

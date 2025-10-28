@@ -1,4 +1,4 @@
-package edu.dosw.taller.Taller_MasterChef;
+package edu.dosw.taller;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

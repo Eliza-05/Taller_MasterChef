@@ -1,4 +1,4 @@
-package edu.dosw.taller.model.components.util;
+package edu.dosw.taller.controller.dtos;
 
 import lombok.Data;
 

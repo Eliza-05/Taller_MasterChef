@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: edu.dosw.taller.Taller_MasterChef.TallerMasterChefApplicationTests
--------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.856 s -- in edu.dosw.taller.Taller_MasterChef.TallerMasterChefApplicationTests

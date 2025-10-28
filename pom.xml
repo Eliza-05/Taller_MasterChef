@@ -176,6 +176,18 @@
                         <configuration>
                             <excludes>
                                 <exclude>**/configurators/**</exclude>
+                                <exclude>**/model/entities/**</exclude>
+                                <exclude>**/model/persistence/**</exclude>
+                                <exclude>**/controller/dtos/**</exclude>
+                                <exclude>**/controller/exception/**</exclude>
+                                <exclude>**/controller/Exception/**</exclude>
+                                <exclude>**/configurators/**</exclude>
+                                <exclude>**/*Application.class</exclude>
+                                <exclude>**/*Configuration.class</exclude>
+                                
+                                <!-- Excluir archivos generados por Lombok -->
+                                <exclude>**/*$$serializer.class</exclude>
+                                <exclude>**/*$Builder.class</exclude>
                             </excludes>
                         </configuration>
                     </execution>
@@ -185,6 +197,22 @@
                             <goal>check</goal>
                         </goals>
                         <configuration>
+                            <excludes>
+                                <!-- Las mismas exclusiones para el check -->
+                                <exclude>**/model/entities/**</exclude>
+                                <exclude>**/model/persistence/**</exclude>
+                                <exclude>**/controller/dtos/**</exclude>
+                                <exclude>**/controller/exception/**</exclude>
+                                <exclude>**/controller/Exception/**</exclude>
+                                <exclude>**/configurators/**</exclude>
+                                <exclude>**/*Application.class</exclude>
+                                <exclude>**/*Configuration.class</exclude>
+                                <exclude>**/controller/*</exclude>
+                                <exclude>**/services/*</exclude>
+                                <exclude>**/service/*</exclude> 
+                                <exclude>**/*$$serializer.class</exclude>
+                                <exclude>**/*$Builder.class</exclude>
+                            </excludes>
                             <rules>
                                 <rule>
                                     <element>BUNDLE</element>

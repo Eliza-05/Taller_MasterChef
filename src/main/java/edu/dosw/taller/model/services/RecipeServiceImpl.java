@@ -1,34 +1,43 @@
 package edu.dosw.taller.model.services;
 
-
 import edu.dosw.taller.controller.dtos.*;
+import edu.dosw.taller.controller.Exception.*;
 import edu.dosw.taller.model.entities.*;
 import edu.dosw.taller.model.persistence.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
 
-    @Autowired
     private RecipeRepository recipeRepository;
+
+    public RecipeServiceImpl(RecipeRepository recipeRepository) {
+        this.recipeRepository = recipeRepository;
+    }
 
     /**
      * Crea una nueva receta a partir de los datos del DTO
      */
     @Override
     public RecipeResponseDto createRecipe(RecipeRequestDto dto) {
-    
+        
+        if (dto.getTitle() == null || dto.getTitle().trim().isEmpty()) {
+            throw new RecipeValidationException("El título de la receta es obligatorio");
+        }
+        
+        if (dto.getIngredients() == null || dto.getIngredients().isEmpty()) {
+            throw new RecipeValidationException("La receta debe tener al menos un ingrediente");
+        }
+        
+        if (dto.getSteps() == null || dto.getSteps().isEmpty()) {
+            throw new RecipeValidationException("La receta debe tener al menos un paso");
+        }
+
         Recipe recipe = new Recipe();
         recipe.setTitle(dto.getTitle());
-        
 
         List<Ingredient> ingredients = dto.getIngredients().stream()
             .map(ingredientDto -> new Ingredient(
@@ -36,36 +45,42 @@ public class RecipeServiceImpl implements RecipeService {
                 ingredientDto.getQuantity(),
                 ingredientDto.getUnit()
             ))
-            .collect(Collectors.toList());
+            .toList();
         recipe.setIngredients(ingredients);
-        
-    
+
         List<Step> steps = dto.getSteps().stream()
             .map(stepDto -> new Step(
                 stepDto.getOrder(),
                 stepDto.getDescription()
             ))
-            .collect(Collectors.toList());
+            .toList();
         recipe.setSteps(steps);
+
+        AuthorType authorType;
+        try {
+            authorType = AuthorType.valueOf(dto.getAuthor().getType());
+        } catch (IllegalArgumentException e) {
+            throw new InvalidAuthorTypeException("Tipo de autor no válido: " + dto.getAuthor().getType() + 
+                ". Valores permitidos: VIEWER, PARTICIPANT, CHEF_JUDGE");
+        }
         
-        
-        AuthorType authorType = AuthorType.valueOf(dto.getAuthor().getType());
         Author author = new Author(dto.getAuthor().getName(), authorType);
         recipe.setAuthor(author);
-        
+
         if (authorType == AuthorType.PARTICIPANT) {
             if (dto.getSeason() == null) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, 
-                    "La temporada es obligatoria para recetas de participantes");
+                throw new InvalidSeasonException("La temporada es obligatoria para recetas de participantes");
+            }
+            if (dto.getSeason() <= 0) {
+                throw new InvalidSeasonException("La temporada debe ser un número positivo");
             }
             recipe.setSeason(dto.getSeason());
         }
-        
+
         recipe.setCreatedAt(Instant.now());
         recipe.setUpdatedAt(Instant.now());
-        
+
         Recipe savedRecipe = recipeRepository.save(recipe);
-        
         return mapToResponseDto(savedRecipe);
     }
 
@@ -76,7 +91,7 @@ public class RecipeServiceImpl implements RecipeService {
     public List<RecipeResponseDto> searchAllRecipes() {
         return recipeRepository.findAll().stream()
             .map(this::mapToResponseDto)
-            .collect(Collectors.toList());
+            .toList();
     }
 
     /**
@@ -85,8 +100,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public RecipeResponseDto searchRecipeById(String id) {
         Recipe recipe = recipeRepository.findById(id)
-            .orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "Receta no encontrada con ID: " + id));
+            .orElseThrow(() -> new RecipeNotFoundException("Receta no encontrada con ID: " + id));
                 
         return mapToResponseDto(recipe);
     }
@@ -100,13 +114,13 @@ public class RecipeServiceImpl implements RecipeService {
         try {
             authorType = AuthorType.valueOf(type);
         } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, 
-                "Tipo de autor no válido: " + type);
+            throw new InvalidAuthorTypeException("Tipo de autor no válido: " + type + 
+                ". Valores permitidos: VIEWER, PARTICIPANT, CHEF_JUDGE");
         }
         
         return recipeRepository.findByAuthorType(authorType).stream()
             .map(this::mapToResponseDto)
-            .collect(Collectors.toList());
+            .toList();
     }
 
     /**
@@ -114,9 +128,13 @@ public class RecipeServiceImpl implements RecipeService {
      */
     @Override
     public List<RecipeResponseDto> searchRecipesBySeason(Integer season) {
+        if (season <= 0) {
+            throw new InvalidSeasonException("La temporada debe ser un número positivo");
+        }
+        
         return recipeRepository.findBySeason(season).stream()
             .map(this::mapToResponseDto)
-            .collect(Collectors.toList());
+            .toList();
     }
 
     /**
@@ -124,9 +142,13 @@ public class RecipeServiceImpl implements RecipeService {
      */
     @Override
     public List<RecipeResponseDto> searchRecipesByIngredient(String ingredient) {
+        if (ingredient == null || ingredient.trim().isEmpty()) {
+            throw new RecipeValidationException("El ingrediente a buscar no puede estar vacío");
+        }
+        
         return recipeRepository.findByIngredientsNameContainingIgnoreCase(ingredient).stream()
             .map(this::mapToResponseDto)
-            .collect(Collectors.toList());
+            .toList();
     }
 
     /**
@@ -135,8 +157,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public void deleteRecipe(String id) {
         if (!recipeRepository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, 
-                "No se puede eliminar. Receta no encontrada con ID: " + id);
+            throw new RecipeNotFoundException("No se puede eliminar. Receta no encontrada con ID: " + id);
         }
         recipeRepository.deleteById(id);
     }
@@ -146,11 +167,12 @@ public class RecipeServiceImpl implements RecipeService {
      */
     @Override
     public RecipeResponseDto updateRecipe(String id, RecipeRequestDto dto) {
-        
         Recipe existingRecipe = recipeRepository.findById(id)
-            .orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "Receta no encontrada con ID: " + id));
-        
+            .orElseThrow(() -> new RecipeNotFoundException("Receta no encontrada con ID: " + id));
+
+        if (dto.getTitle() == null || dto.getTitle().trim().isEmpty()) {
+            throw new RecipeValidationException("El título de la receta es obligatorio");
+        }
 
         existingRecipe.setTitle(dto.getTitle());
         
@@ -160,7 +182,7 @@ public class RecipeServiceImpl implements RecipeService {
                 ingredientDto.getQuantity(),
                 ingredientDto.getUnit()
             ))
-            .collect(Collectors.toList());
+            .toList();
         existingRecipe.setIngredients(ingredients);
         
         List<Step> steps = dto.getSteps().stream()
@@ -168,28 +190,34 @@ public class RecipeServiceImpl implements RecipeService {
                 stepDto.getOrder(),
                 stepDto.getDescription()
             ))
-            .collect(Collectors.toList());
+            .toList();
         existingRecipe.setSteps(steps);
         
-        AuthorType authorType = AuthorType.valueOf(dto.getAuthor().getType());
+        AuthorType authorType;
+        try {
+            authorType = AuthorType.valueOf(dto.getAuthor().getType());
+        } catch (IllegalArgumentException e) {
+            throw new InvalidAuthorTypeException("Tipo de autor no válido: " + dto.getAuthor().getType());
+        }
+        
         Author author = new Author(dto.getAuthor().getName(), authorType);
         existingRecipe.setAuthor(author);
         
         if (authorType == AuthorType.PARTICIPANT) {
             if (dto.getSeason() == null) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, 
-                    "La temporada es obligatoria para recetas de participantes");
+                throw new InvalidSeasonException("La temporada es obligatoria para recetas de participantes");
+            }
+            if (dto.getSeason() <= 0) {
+                throw new InvalidSeasonException("La temporada debe ser un número positivo");
             }
             existingRecipe.setSeason(dto.getSeason());
         } else {
             existingRecipe.setSeason(null); 
         }
-        
 
         existingRecipe.setUpdatedAt(Instant.now());
         
         Recipe updatedRecipe = recipeRepository.save(existingRecipe);
-        
         return mapToResponseDto(updatedRecipe);
     }
     
@@ -209,7 +237,7 @@ public class RecipeServiceImpl implements RecipeService {
                 ingredientDto.setUnit(ingredient.getUnit());
                 return ingredientDto;
             })
-            .collect(Collectors.toList());
+            .toList();
         dto.setIngredients(ingredients);
         
         List<StepDto> steps = recipe.getSteps().stream()
@@ -219,7 +247,7 @@ public class RecipeServiceImpl implements RecipeService {
                 stepDto.setDescription(step.getDescription());
                 return stepDto;
             })
-            .collect(Collectors.toList());
+            .toList();
         dto.setSteps(steps);
         
         AuthorDto authorDto = new AuthorDto();

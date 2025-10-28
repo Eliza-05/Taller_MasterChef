@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RecipeServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Taller_MasterChef</a> &gt; <a href="index.source.html" class="el_package">edu.dosw.taller.model.services</a> &gt; <span class="el_source">RecipeServiceImpl.java</span></div><h1>RecipeServiceImpl.java</h1><pre class="source lang-java linenums">package edu.dosw.taller.model.services;
+
+import edu.dosw.taller.controller.dtos.*;
+import edu.dosw.taller.controller.Exception.*;
+import edu.dosw.taller.model.entities.*;
+import edu.dosw.taller.model.persistence.repository.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.time.Instant;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+<span class="fc" id="L15">public class RecipeServiceImpl implements RecipeService {</span>
+
+    @Autowired
+    private RecipeRepository recipeRepository;
+
+    /**
+     * Crea una nueva receta a partir de los datos del DTO
+     */
+    @Override
+    public RecipeResponseDto createRecipe(RecipeRequestDto dto) {
+        
+<span class="pc bpc" id="L26" title="1 of 4 branches missed.">        if (dto.getTitle() == null || dto.getTitle().trim().isEmpty()) {</span>
+<span class="fc" id="L27">            throw new RecipeValidationException(&quot;El título de la receta es obligatorio&quot;);</span>
+        }
+        
+<span class="pc bpc" id="L30" title="1 of 4 branches missed.">        if (dto.getIngredients() == null || dto.getIngredients().isEmpty()) {</span>
+<span class="fc" id="L31">            throw new RecipeValidationException(&quot;La receta debe tener al menos un ingrediente&quot;);</span>
+        }
+        
+<span class="pc bpc" id="L34" title="1 of 4 branches missed.">        if (dto.getSteps() == null || dto.getSteps().isEmpty()) {</span>
+<span class="fc" id="L35">            throw new RecipeValidationException(&quot;La receta debe tener al menos un paso&quot;);</span>
+        }
+
+<span class="fc" id="L38">        Recipe recipe = new Recipe();</span>
+<span class="fc" id="L39">        recipe.setTitle(dto.getTitle());</span>
+
+<span class="fc" id="L41">        List&lt;Ingredient&gt; ingredients = dto.getIngredients().stream()</span>
+<span class="fc" id="L42">            .map(ingredientDto -&gt; new Ingredient(</span>
+<span class="fc" id="L43">                ingredientDto.getName(),</span>
+<span class="fc" id="L44">                ingredientDto.getQuantity(),</span>
+<span class="fc" id="L45">                ingredientDto.getUnit()</span>
+            ))
+<span class="fc" id="L47">            .collect(Collectors.toList());</span>
+<span class="fc" id="L48">        recipe.setIngredients(ingredients);</span>
+
+<span class="fc" id="L50">        List&lt;Step&gt; steps = dto.getSteps().stream()</span>
+<span class="fc" id="L51">            .map(stepDto -&gt; new Step(</span>
+<span class="fc" id="L52">                stepDto.getOrder(),</span>
+<span class="fc" id="L53">                stepDto.getDescription()</span>
+            ))
+<span class="fc" id="L55">            .collect(Collectors.toList());</span>
+<span class="fc" id="L56">        recipe.setSteps(steps);</span>
+
+        AuthorType authorType;
+        try {
+<span class="fc" id="L60">            authorType = AuthorType.valueOf(dto.getAuthor().getType());</span>
+<span class="fc" id="L61">        } catch (IllegalArgumentException e) {</span>
+<span class="fc" id="L62">            throw new InvalidAuthorTypeException(&quot;Tipo de autor no válido: &quot; + dto.getAuthor().getType() + </span>
+                &quot;. Valores permitidos: VIEWER, PARTICIPANT, CHEF_JUDGE&quot;);
+<span class="fc" id="L64">        }</span>
+        
+<span class="fc" id="L66">        Author author = new Author(dto.getAuthor().getName(), authorType);</span>
+<span class="fc" id="L67">        recipe.setAuthor(author);</span>
+
+<span class="fc bfc" id="L69" title="All 2 branches covered.">        if (authorType == AuthorType.PARTICIPANT) {</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">            if (dto.getSeason() == null) {</span>
+<span class="fc" id="L71">                throw new InvalidSeasonException(&quot;La temporada es obligatoria para recetas de participantes&quot;);</span>
+            }
+<span class="pc bpc" id="L73" title="1 of 2 branches missed.">            if (dto.getSeason() &lt;= 0) {</span>
+<span class="nc" id="L74">                throw new InvalidSeasonException(&quot;La temporada debe ser un número positivo&quot;);</span>
+            }
+<span class="fc" id="L76">            recipe.setSeason(dto.getSeason());</span>
+        }
+
+<span class="fc" id="L79">        recipe.setCreatedAt(Instant.now());</span>
+<span class="fc" id="L80">        recipe.setUpdatedAt(Instant.now());</span>
+
+<span class="fc" id="L82">        Recipe savedRecipe = recipeRepository.save(recipe);</span>
+<span class="fc" id="L83">        return mapToResponseDto(savedRecipe);</span>
+    }
+
+    /**
+     * Busca todas las recetas
+     */
+    @Override
+    public List&lt;RecipeResponseDto&gt; searchAllRecipes() {
+<span class="fc" id="L91">        return recipeRepository.findAll().stream()</span>
+<span class="fc" id="L92">            .map(this::mapToResponseDto)</span>
+<span class="fc" id="L93">            .collect(Collectors.toList());</span>
+    }
+
+    /**
+     * Busca una receta por ID
+     */
+    @Override
+    public RecipeResponseDto searchRecipeById(String id) {
+<span class="fc" id="L101">        Recipe recipe = recipeRepository.findById(id)</span>
+<span class="fc" id="L102">            .orElseThrow(() -&gt; new RecipeNotFoundException(&quot;Receta no encontrada con ID: &quot; + id));</span>
+                
+<span class="fc" id="L104">        return mapToResponseDto(recipe);</span>
+    }
+
+    /**
+     * Busca recetas por tipo de autor
+     */
+    @Override
+    public List&lt;RecipeResponseDto&gt; searchRecipesByAuthorType(String type) {
+        AuthorType authorType;
+        try {
+<span class="fc" id="L114">            authorType = AuthorType.valueOf(type);</span>
+<span class="fc" id="L115">        } catch (IllegalArgumentException e) {</span>
+<span class="fc" id="L116">            throw new InvalidAuthorTypeException(&quot;Tipo de autor no válido: &quot; + type + </span>
+                &quot;. Valores permitidos: VIEWER, PARTICIPANT, CHEF_JUDGE&quot;);
+<span class="fc" id="L118">        }</span>
+        
+<span class="fc" id="L120">        return recipeRepository.findByAuthorType(authorType).stream()</span>
+<span class="fc" id="L121">            .map(this::mapToResponseDto)</span>
+<span class="fc" id="L122">            .collect(Collectors.toList());</span>
+    }
+
+    /**
+     * Busca recetas por temporada
+     */
+    @Override
+    public List&lt;RecipeResponseDto&gt; searchRecipesBySeason(Integer season) {
+<span class="fc bfc" id="L130" title="All 2 branches covered.">        if (season &lt;= 0) {</span>
+<span class="fc" id="L131">            throw new InvalidSeasonException(&quot;La temporada debe ser un número positivo&quot;);</span>
+        }
+        
+<span class="fc" id="L134">        return recipeRepository.findBySeason(season).stream()</span>
+<span class="fc" id="L135">            .map(this::mapToResponseDto)</span>
+<span class="fc" id="L136">            .collect(Collectors.toList());</span>
+    }
+
+    /**
+     * Busca recetas por ingrediente
+     */
+    @Override
+    public List&lt;RecipeResponseDto&gt; searchRecipesByIngredient(String ingredient) {
+<span class="pc bpc" id="L144" title="1 of 4 branches missed.">        if (ingredient == null || ingredient.trim().isEmpty()) {</span>
+<span class="fc" id="L145">            throw new RecipeValidationException(&quot;El ingrediente a buscar no puede estar vacío&quot;);</span>
+        }
+        
+<span class="fc" id="L148">        return recipeRepository.findByIngredientsNameContainingIgnoreCase(ingredient).stream()</span>
+<span class="fc" id="L149">            .map(this::mapToResponseDto)</span>
+<span class="fc" id="L150">            .collect(Collectors.toList());</span>
+    }
+
+    /**
+     * Elimina una receta por ID
+     */
+    @Override
+    public void deleteRecipe(String id) {
+<span class="fc bfc" id="L158" title="All 2 branches covered.">        if (!recipeRepository.existsById(id)) {</span>
+<span class="fc" id="L159">            throw new RecipeNotFoundException(&quot;No se puede eliminar. Receta no encontrada con ID: &quot; + id);</span>
+        }
+<span class="fc" id="L161">        recipeRepository.deleteById(id);</span>
+<span class="fc" id="L162">    }</span>
+
+    /**
+     * Actualiza una receta existente
+     */
+    @Override
+    public RecipeResponseDto updateRecipe(String id, RecipeRequestDto dto) {
+<span class="fc" id="L169">        Recipe existingRecipe = recipeRepository.findById(id)</span>
+<span class="fc" id="L170">            .orElseThrow(() -&gt; new RecipeNotFoundException(&quot;Receta no encontrada con ID: &quot; + id));</span>
+
+<span class="pc bpc" id="L172" title="2 of 4 branches missed.">        if (dto.getTitle() == null || dto.getTitle().trim().isEmpty()) {</span>
+<span class="nc" id="L173">            throw new RecipeValidationException(&quot;El título de la receta es obligatorio&quot;);</span>
+        }
+
+<span class="fc" id="L176">        existingRecipe.setTitle(dto.getTitle());</span>
+        
+<span class="fc" id="L178">        List&lt;Ingredient&gt; ingredients = dto.getIngredients().stream()</span>
+<span class="fc" id="L179">            .map(ingredientDto -&gt; new Ingredient(</span>
+<span class="fc" id="L180">                ingredientDto.getName(),</span>
+<span class="fc" id="L181">                ingredientDto.getQuantity(),</span>
+<span class="fc" id="L182">                ingredientDto.getUnit()</span>
+            ))
+<span class="fc" id="L184">            .collect(Collectors.toList());</span>
+<span class="fc" id="L185">        existingRecipe.setIngredients(ingredients);</span>
+        
+<span class="fc" id="L187">        List&lt;Step&gt; steps = dto.getSteps().stream()</span>
+<span class="fc" id="L188">            .map(stepDto -&gt; new Step(</span>
+<span class="fc" id="L189">                stepDto.getOrder(),</span>
+<span class="fc" id="L190">                stepDto.getDescription()</span>
+            ))
+<span class="fc" id="L192">            .collect(Collectors.toList());</span>
+<span class="fc" id="L193">        existingRecipe.setSteps(steps);</span>
+        
+        AuthorType authorType;
+        try {
+<span class="fc" id="L197">            authorType = AuthorType.valueOf(dto.getAuthor().getType());</span>
+<span class="nc" id="L198">        } catch (IllegalArgumentException e) {</span>
+<span class="nc" id="L199">            throw new InvalidAuthorTypeException(&quot;Tipo de autor no válido: &quot; + dto.getAuthor().getType());</span>
+<span class="fc" id="L200">        }</span>
+        
+<span class="fc" id="L202">        Author author = new Author(dto.getAuthor().getName(), authorType);</span>
+<span class="fc" id="L203">        existingRecipe.setAuthor(author);</span>
+        
+<span class="pc bpc" id="L205" title="1 of 2 branches missed.">        if (authorType == AuthorType.PARTICIPANT) {</span>
+<span class="nc bnc" id="L206" title="All 2 branches missed.">            if (dto.getSeason() == null) {</span>
+<span class="nc" id="L207">                throw new InvalidSeasonException(&quot;La temporada es obligatoria para recetas de participantes&quot;);</span>
+            }
+<span class="nc bnc" id="L209" title="All 2 branches missed.">            if (dto.getSeason() &lt;= 0) {</span>
+<span class="nc" id="L210">                throw new InvalidSeasonException(&quot;La temporada debe ser un número positivo&quot;);</span>
+            }
+<span class="nc" id="L212">            existingRecipe.setSeason(dto.getSeason());</span>
+        } else {
+<span class="fc" id="L214">            existingRecipe.setSeason(null); </span>
+        }
+
+<span class="fc" id="L217">        existingRecipe.setUpdatedAt(Instant.now());</span>
+        
+<span class="fc" id="L219">        Recipe updatedRecipe = recipeRepository.save(existingRecipe);</span>
+<span class="fc" id="L220">        return mapToResponseDto(updatedRecipe);</span>
+    }
+    
+    /**
+     * Mapea una entidad Recipe a un DTO de respuesta
+     */
+    private RecipeResponseDto mapToResponseDto(Recipe recipe) {
+<span class="fc" id="L227">        RecipeResponseDto dto = new RecipeResponseDto();</span>
+<span class="fc" id="L228">        dto.setId(recipe.getId());</span>
+<span class="fc" id="L229">        dto.setTitle(recipe.getTitle());</span>
+        
+<span class="fc" id="L231">        List&lt;IngredientDto&gt; ingredients = recipe.getIngredients().stream()</span>
+<span class="fc" id="L232">            .map(ingredient -&gt; {</span>
+<span class="fc" id="L233">                IngredientDto ingredientDto = new IngredientDto();</span>
+<span class="fc" id="L234">                ingredientDto.setName(ingredient.getName());</span>
+<span class="fc" id="L235">                ingredientDto.setQuantity(ingredient.getQuantity());</span>
+<span class="fc" id="L236">                ingredientDto.setUnit(ingredient.getUnit());</span>
+<span class="fc" id="L237">                return ingredientDto;</span>
+            })
+<span class="fc" id="L239">            .collect(Collectors.toList());</span>
+<span class="fc" id="L240">        dto.setIngredients(ingredients);</span>
+        
+<span class="fc" id="L242">        List&lt;StepDto&gt; steps = recipe.getSteps().stream()</span>
+<span class="fc" id="L243">            .map(step -&gt; {</span>
+<span class="fc" id="L244">                StepDto stepDto = new StepDto();</span>
+<span class="fc" id="L245">                stepDto.setOrder(step.getOrder());</span>
+<span class="fc" id="L246">                stepDto.setDescription(step.getDescription());</span>
+<span class="fc" id="L247">                return stepDto;</span>
+            })
+<span class="fc" id="L249">            .collect(Collectors.toList());</span>
+<span class="fc" id="L250">        dto.setSteps(steps);</span>
+        
+<span class="fc" id="L252">        AuthorDto authorDto = new AuthorDto();</span>
+<span class="fc" id="L253">        authorDto.setName(recipe.getAuthor().getName());</span>
+<span class="fc" id="L254">        authorDto.setType(recipe.getAuthor().getType().name());</span>
+<span class="fc" id="L255">        dto.setAuthor(authorDto);</span>
+        
+<span class="fc" id="L257">        dto.setSeason(recipe.getSeason());</span>
+        
+<span class="fc" id="L259">        dto.setCreatedAt(recipe.getCreatedAt());</span>
+<span class="fc" id="L260">        dto.setUpdatedAt(recipe.getUpdatedAt());</span>
+        
+<span class="fc" id="L262">        return dto;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

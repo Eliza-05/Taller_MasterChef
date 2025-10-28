@@ -1,2 +1,4 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
-Taller_MasterChef,edu.dosw.taller,Application,5,3,0,0,2,1,1,1,1,1
+Taller_MasterChef,edu.dosw.taller.model.services,RecipeServiceImpl,41,468,12,24,9,118,10,26,0,18
+Taller_MasterChef,edu.dosw.taller.controller,RecipeController,6,82,0,0,1,16,1,12,1,12
+Taller_MasterChef,edu.dosw.taller.configs,SwaggerConfig,0,25,0,0,0,9,0,2,0,2
