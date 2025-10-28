@@ -1,0 +1,36 @@
+name: CI - Tests and Quality
+
+on:
+  push: { branches: [develop] }
+  pull_request: { branches: [develop] }
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      mongodb:
+        image: mongo:7.0
+        options: >-
+          --health-cmd="mongosh --host 127.0.0.1 --eval 'db.runCommand({ ping: 1 })' --quiet"
+          --health-interval=10s --health-timeout=5s --health-retries=10
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: '17' }
+      - uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2-
+      - name: Set env for tests
+        run: |
+          echo "SPRING_PROFILES_ACTIVE=test" >> $GITHUB_ENV
+          echo "MONGODB_URI=mongodb://mongodb:27017/masterchef-test" >> $GITHUB_ENV
+      - name: Build + Test + Coverage
+        run: mvn -B -DskipTests=false clean verify
+      - name: Publish JaCoCo HTML
+        if: always()
+        uses: actions/upload-artifact@v4
+        with: { name: jacoco-report, path: target/site/jacoco/ }
