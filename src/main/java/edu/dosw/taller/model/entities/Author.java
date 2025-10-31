@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Representa al autor de una receta: televidente, participante o chef jurado.
+ * Representa al autor de una receta: televidente, participante o chef jurado
  */
 @Data
 @NoArgsConstructor
