@@ -26,8 +26,13 @@ jobs:
 
       - name: Build Docker image
         run: |
-          IMAGE_NAME=${{ secrets.ACR_LOGIN_SERVER }}/masterchef-api
+          echo "ACR_LOGIN_SERVER = ${{ secrets.ACR_LOGIN_SERVER }}"
+          IMAGE_NAME="${{ secrets.ACR_LOGIN_SERVER }}/masterchef-api"
+          echo "IMAGE_NAME = $IMAGE_NAME"
+
           GIT_TAG=${GITHUB_SHA::7}
+          echo "GIT_TAG = $GIT_TAG"
+
           docker build -t $IMAGE_NAME:latest -t $IMAGE_NAME:$GIT_TAG .
 
 
