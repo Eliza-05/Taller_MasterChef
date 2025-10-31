@@ -20,9 +20,9 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.release>17</maven.compiler.release>
-        <sonar.projectKey>masterchef</sonar.projectKey>
-        <sonar.projectName>masterchef</sonar.projectName>
-        <sonar.host.url>http://localhost:9000</sonar.host.url>
+        <sonar.organization>eliza-05</sonar.organization>
+        <sonar.projectKey>Eliza-05_Taller_MasterChef</sonar.projectKey>
+        <sonar.projectName>Taller_MasterChef</sonar.projectName>
         <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
         <sonar.coverage.exclusions>src/*/configurators/*</sonar.coverage.exclusions>
     </properties>
