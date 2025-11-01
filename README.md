@@ -37,11 +37,11 @@
 
 | 📌 **Sección Principal** | 🔗 **Enlace Directo** | 📌 **Sección Principal** | 🔗 **Enlace Directo** |
 |-------------------------|----------------------|-------------------------|----------------------|
-| 👩‍💻 **Descripción** | [Ver](#1️⃣-👩‍💻-descripción-del-proyecto) | 🌐 **API en Azure** | [Ver](#5️⃣-🌐-api-desplegada-en-azure) |
-| ⚙️ **Tecnologías** | [Ver](#2️⃣-⚙️-tecnologías-utilizadas) | 📘 **Endpoints** | [Ver](#6️⃣-📘-endpoints-request--response) |
-| 🧩 **Estructura** | [Ver](#3️⃣-🧩-estructura-del-proyecto) | 🧪 **Testing** | [Ver](#7️⃣-🧪-testing-y-calidad) |
-| 🚀 **Instalación Local** | [Ver](#4️⃣-🚀-instalación-y-ejecución-local) | ☁️ **CI/CD Azure** | [Ver](#8️⃣-☁️-despliegue-y-cicd-en-azure) |
-| 🤝 **Autor** | [Ver](#9️⃣-🤝-autor-y-créditos) | | |
+| 👩‍💻 **Descripción** | [Ver](#descripción-del-proyecto) | 🌐 **API en Azure** | [Ver](#api-desplegada-en-azure) |
+| ⚙️ **Tecnologías** | [Ver](#2️⃣tecnologías-utilizadas) | 📘 **Endpoints** | [Ver](#endpoints-request--response) |
+| 🧩 **Estructura** | [Ver](#estructura-del-proyecto) | 🧪 **Testing** | [Ver](#testing-y-calidad) |
+| 🚀 **Instalación Local** | [Ver](#instalación-y-ejecución-local) | ☁️ **CI/CD Azure** | [Ver](#despliegue-y-cicd-en-azure) |
+| 🤝 **Autor** | [Ver](#autor-y-créditos) | | |
 
 </div>
 
@@ -853,22 +853,6 @@ DELETE /api/recetas/507f1f77bcf86cd799439011
 
 ---
 
-### 🔍 **Análisis de Calidad con SonarQube**
-
-![SonarQube Análisis](docs/imagenes/SonarQubeReporte.png)
-
-| 🏆 **Métrica** | 📊 **Resultado** | 🎯 **Calificación** |
-|---------------|------------------|-------------------|
-| **🐛 Bugs** | 0 | ✅ A |
-| **🔒 Vulnerabilidades** | 0 | ✅ A |
-| **👃 Code Smells** | 2 | ✅ A |
-| **📊 Cobertura** | 85.2% | ✅ A |
-| **🔄 Duplicación** | 0.0% | ✅ A |
-
-> 🎉 **Quality Gate:** ✅ **PASSED** - El código cumple con todos los estándares de calidad.
-
----
-
 ## 8️⃣ ☁️ Despliegue y CI/CD en Azure
 
 > 🚀 **Despliegue automatizado** usando GitHub Actions + Azure App Service con contenedores Docker.
@@ -904,7 +888,7 @@ graph LR
 ### ✅ **Evidencia de Despliegue Exitoso**
 
 #### **🔄 GitHub Actions - Pipeline Exitoso**
-![GitHub Actions Success](docs/imagenes/GitHubActionsPipeline.png)
+![GitHub Actions Success](docs/imagenes/GitHubActionsPipeline1.png)
 
 #### **☁️ Azure App Service - Aplicación Desplegada**
 ![Azure App Service](docs/imagenes/AzureAppService.png)
