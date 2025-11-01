@@ -2,6 +2,10 @@
 
 # 🍽️ Taller MasterChef — API de Gestión de Recetas
 
+![CI - Tests and Quality](https://github.com/Eliza-05/Taller_MasterChef/actions/workflows/ci.yml/badge.svg?branch=main)
+![CD - Deploy to Azure Web App (Container)](https://github.com/Eliza-05/Taller_MasterChef/actions/workflows/cd.yml/badge.svg?branch=main)
+
+
 ## 🛠️ **Stack Tecnológico**
 
 <table>
