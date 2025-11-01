@@ -13,6 +13,7 @@ edu\dosw\taller\model\services\RecipeServiceImpl.class
 edu\dosw\taller\Application.class
 edu\dosw\taller\configs\SwaggerConfig.class
 edu\dosw\taller\controller\dtos\StepDto.class
+edu\dosw\taller\configs\SecurityConfig.class
 edu\dosw\taller\controller\dtos\IngredientDto.class
 edu\dosw\taller\controller\dtos\AuthorDto.class
 edu\dosw\taller\controller\Exception\GlobalExceptionHandler.class
