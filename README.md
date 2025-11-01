@@ -255,7 +255,6 @@ Antes de comenzar, verificar que se tengan instalados:
 | 🔧 **Maven** | 3.6+ | `mvn -version` |
 | 🐳 **Docker** (opcional) | 20.10+ | `docker --version` |
 
-> ⚠️ **Si no se tiene Java 17**, descargarlo desde [aquí](https://adoptium.net/)
 
 ---
 
@@ -414,9 +413,9 @@ mvn jacoco:report
 
 ### 📍 **URL**
 
-| 🌐 **Servicio** | 🔗 **URL** | 📋 **Descripción** |
-|-----------------|------------|-------------------|
-| **📘 Swagger UI** | [`https://masterchef-api.azurewebsites.net/swagger-ui/index.html`](https://masterchef-api.azurewebsites.net/swagger-ui/index.html) | 🎯 Documentación interactiva - **¡Prueba aquí!** |
+| 🌐 **Servicio** | 🔗 **URL** | 
+|-----------------|------------|
+| **📘 Swagger UI** | [`https://masterchef-container-gjeybrc4bqcpddhw.eastus2-01.azurewebsites.net/swagger-ui.html`](https://masterchef-container-gjeybrc4bqcpddhw.eastus2-01.azurewebsites.net/swagger-ui.html) |🎯 Documentación interactiva - **¡Prueba aquí!** |
 
 ---
 
@@ -451,76 +450,360 @@ mvn jacoco:report
 
 ## 📝 **Detalles de cada Endpoint**
 
+---
+
 ### 🟢 **POST /api/recetas/chef** - Crear Receta de Chef
 
-| **Request** | **Response** |
-|-------------|--------------|
-| ```json<br>{<br>  "title": "Pasta Carbonara Gourmet",<br>  "author": {<br>    "name": "Chef Mario Batali",<br>    "type": "CHEF_JUDGE"<br>  },<br>  "ingredients": [<br>    {<br>      "name": "pasta",<br>      "quantity": "200 gramos",<br>      "unit": "gramos"<br>    }<br>  ],<br>  "steps": [<br>    {<br>      "order": 1,<br>      "description": "Hervir agua con sal"<br>    }<br>  ]<br>}<br>``` | ```json<br>{<br>  "id": "507f1f77bcf86cd799439011",<br>  "title": "Pasta Carbonara Gourmet",<br>  "author": {<br>    "name": "Chef Mario Batali",<br>    "type": "CHEF_JUDGE"<br>  },<br>  "ingredients": [...],<br>  "steps": [...],<br>  "createdAt": "2023-12-15T10:30:00Z",<br>  "updatedAt": "2023-12-15T10:30:00Z"<br>}<br>``` |
+#### Request
+
+```json
+{
+  "title": "Pasta Carbonara Gourmet",
+  "author": {
+    "name": "Chef Mario Batali",
+    "type": "CHEF_JUDGE"
+  },
+  "ingredients": [
+    {
+      "name": "pasta",
+      "quantity": "200 gramos",
+      "unit": "gramos"
+    }
+  ],
+  "steps": [
+    {
+      "order": 1,
+      "description": "Hervir agua con sal"
+    }
+  ]
+}
+```
+
+#### Response
+
+```json
+{
+  "id": "507f1f77bcf86cd799439011",
+  "title": "Pasta Carbonara Gourmet",
+  "author": {
+    "name": "Chef Mario Batali",
+    "type": "CHEF_JUDGE"
+  },
+  "ingredients": [...],
+  "steps": [...],
+  "createdAt": "2023-12-15T10:30:00Z",
+  "updatedAt": "2023-12-15T10:30:00Z"
+}
+```
 
 ---
 
 ### 🟢 **POST /api/recetas/participante** - Crear Receta de Participante
 
-| **Request** | **Response** |
-|-------------|--------------|
-| ```json<br>{<br>  "title": "Tacos al Pastor Caseros",<br>  "author": {<br>    "name": "Ana García",<br>    "type": "PARTICIPANT"<br>  },<br>  "season": 3,<br>  "ingredients": [<br>    {<br>      "name": "carne de cerdo",<br>      "quantity": "500 gramos",<br>      "unit": "gramos"<br>    }<br>  ],<br>  "steps": [<br>    {<br>      "order": 1,<br>      "description": "Marinar la carne"<br>    }<br>  ]<br>}<br>``` | ```json<br>{<br>  "id": "507f1f77bcf86cd799439012",<br>  "title": "Tacos al Pastor Caseros",<br>  "author": {<br>    "name": "Ana García",<br>    "type": "PARTICIPANT"<br>  },<br>  "season": 3,<br>  "ingredients": [...],<br>  "steps": [...],<br>  "createdAt": "2023-12-15T11:00:00Z",<br>  "updatedAt": "2023-12-15T11:00:00Z"<br>}<br>``` |
+#### Request
+
+```json
+{
+  "title": "Tacos al Pastor Caseros",
+  "author": {
+    "name": "Ana García",
+    "type": "PARTICIPANT"
+  },
+  "season": 3,
+  "ingredients": [
+    {
+      "name": "carne de cerdo",
+      "quantity": "500 gramos",
+      "unit": "gramos"
+    }
+  ],
+  "steps": [
+    {
+      "order": 1,
+      "description": "Marinar la carne"
+    }
+  ]
+}
+```
+
+#### Response
+
+```json
+{
+  "id": "507f1f77bcf86cd799439012",
+  "title": "Tacos al Pastor Caseros",
+  "author": {
+    "name": "Ana García",
+    "type": "PARTICIPANT"
+  },
+  "season": 3,
+  "ingredients": [...],
+  "steps": [...],
+  "createdAt": "2023-12-15T11:00:00Z",
+  "updatedAt": "2023-12-15T11:00:00Z"
+}
+```
 
 ---
 
 ### 🟢 **POST /api/recetas/televidente** - Crear Receta de Televidente
 
-| **Request** | **Response** |
-|-------------|--------------|
-| ```json<br>{<br>  "title": "Galletas de Chocolate",<br>  "author": {<br>    "name": "María Rodríguez",<br>    "type": "VIEWER"<br>  },<br>  "ingredients": [<br>    {<br>      "name": "harina",<br>      "quantity": "300 gramos",<br>      "unit": "gramos"<br>    }<br>  ],<br>  "steps": [<br>    {<br>      "order": 1,<br>      "description": "Mezclar ingredientes"<br>    }<br>  ]<br>}<br>``` | ```json<br>{<br>  "id": "507f1f77bcf86cd799439013",<br>  "title": "Galletas de Chocolate",<br>  "author": {<br>    "name": "María Rodríguez",<br>    "type": "VIEWER"<br>  },<br>  "ingredients": [...],<br>  "steps": [...],<br>  "createdAt": "2023-12-15T12:00:00Z",<br>  "updatedAt": "2023-12-15T12:00:00Z"<br>}<br>``` |
+#### Request
+
+```json
+{
+  "title": "Galletas de Chocolate",
+  "author": {
+    "name": "María Rodríguez",
+    "type": "VIEWER"
+  },
+  "ingredients": [
+    {
+      "name": "harina",
+      "quantity": "300 gramos",
+      "unit": "gramos"
+    }
+  ],
+  "steps": [
+    {
+      "order": 1,
+      "description": "Mezclar ingredientes"
+    }
+  ]
+}
+```
+
+#### Response
+
+```json
+{
+  "id": "507f1f77bcf86cd799439013",
+  "title": "Galletas de Chocolate",
+  "author": {
+    "name": "María Rodríguez",
+    "type": "VIEWER"
+  },
+  "ingredients": [...],
+  "steps": [...],
+  "createdAt": "2023-12-15T12:00:00Z",
+  "updatedAt": "2023-12-15T12:00:00Z"
+}
+```
 
 ---
 
 ### 🔵 **GET /api/recetas** - Obtener Todas las Recetas
 
-| **Request** | **Response** |
-|-------------|--------------|
-| `GET /api/recetas`<br><br>*(No requiere body)* | ```json<br>[<br>  {<br>    "id": "507f1f77bcf86cd799439011",<br>    "title": "Pasta Carbonara Gourmet",<br>    "author": {<br>      "name": "Chef Mario Batali",<br>      "type": "CHEF_JUDGE"<br>    },<br>    "ingredients": [...],<br>    "steps": [...],<br>    "createdAt": "2023-12-15T10:30:00Z",<br>    "updatedAt": "2023-12-15T10:30:00Z"<br>  },<br>  {<br>    "id": "507f1f77bcf86cd799439012",<br>    "title": "Tacos al Pastor",<br>    "author": {...},<br>    "season": 3,<br>    "ingredients": [...],<br>    "steps": [...]<br>  }<br>]<br>``` |
+#### Request
+
+```
+GET /api/recetas
+```
+
+#### Response
+
+```json
+[
+  {
+    "id": "507f1f77bcf86cd799439011",
+    "title": "Pasta Carbonara Gourmet",
+    "author": {
+      "name": "Chef Mario Batali",
+      "type": "CHEF_JUDGE"
+    },
+    "ingredients": [...],
+    "steps": [...],
+    "createdAt": "2023-12-15T10:30:00Z",
+    "updatedAt": "2023-12-15T10:30:00Z"
+  },
+  {
+    "id": "507f1f77bcf86cd799439012",
+    "title": "Tacos al Pastor",
+    "author": {...},
+    "season": 3,
+    "ingredients": [...],
+    "steps": [...]
+  }
+]
+```
 
 ---
 
 ### 🔵 **GET /api/recetas/{id}** - Obtener Receta por ID
 
-| **Request** | **Response** |
-|-------------|--------------|
-| `GET /api/recetas/507f1f77bcf86cd799439011`<br><br>*(Path parameter: id)* | **✅ Éxito (200):**<br>```json<br>{<br>  "id": "507f1f77bcf86cd799439011",<br>  "title": "Pasta Carbonara Gourmet",<br>  "author": {<br>    "name": "Chef Mario Batali",<br>    "type": "CHEF_JUDGE"<br>  },<br>  "ingredients": [...],<br>  "steps": [...],<br>  "createdAt": "2023-12-15T10:30:00Z",<br>  "updatedAt": "2023-12-15T10:30:00Z"<br>}<br>```<br><br>**❌ Error (404):**<br>```json<br>{<br>  "status": 404,<br>  "error": "Not Found",<br>  "message": "Receta no encontrada con ID: ...",<br>  "timestamp": "2023-12-15T15:30:00Z"<br>}<br>``` |
+#### Request
+
+```
+GET /api/recetas/507f1f77bcf86cd799439011
+```
+
+#### Response (200 OK)
+
+```json
+{
+  "id": "507f1f77bcf86cd799439011",
+  "title": "Pasta Carbonara Gourmet",
+  "author": {
+    "name": "Chef Mario Batali",
+    "type": "CHEF_JUDGE"
+  },
+  "ingredients": [...],
+  "steps": [...],
+  "createdAt": "2023-12-15T10:30:00Z",
+  "updatedAt": "2023-12-15T10:30:00Z"
+}
+```
+
+#### Response (404 Not Found)
+
+```json
+{
+  "status": 404,
+  "error": "Not Found",
+  "message": "Receta no encontrada con ID: ...",
+  "timestamp": "2023-12-15T15:30:00Z"
+}
+```
 
 ---
 
 ### 🔵 **GET /api/recetas/temporada/{season}** - Recetas por Temporada
 
-| **Request** | **Response** |
-|-------------|--------------|
-| `GET /api/recetas/temporada/3`<br><br>*(Path parameter: season)* | ```json<br>[<br>  {<br>    "id": "507f1f77bcf86cd799439012",<br>    "title": "Tacos al Pastor Caseros",<br>    "author": {<br>      "name": "Ana García",<br>      "type": "PARTICIPANT"<br>    },<br>    "season": 3,<br>    "ingredients": [...],<br>    "steps": [...],<br>    "createdAt": "2023-12-15T11:00:00Z",<br>    "updatedAt": "2023-12-15T11:00:00Z"<br>  }<br>]<br>``` |
+#### Request
+
+```
+GET /api/recetas/temporada/3
+```
+
+#### Response
+
+```json
+[
+  {
+    "id": "507f1f77bcf86cd799439012",
+    "title": "Tacos al Pastor Caseros",
+    "author": {
+      "name": "Ana García",
+      "type": "PARTICIPANT"
+    },
+    "season": 3,
+    "ingredients": [...],
+    "steps": [...],
+    "createdAt": "2023-12-15T11:00:00Z",
+    "updatedAt": "2023-12-15T11:00:00Z"
+  }
+]
+```
 
 ---
 
 ### 🔵 **GET /api/recetas/ingrediente/{ingredient}** - Buscar por Ingrediente
 
-| **Request** | **Response** |
-|-------------|--------------|
-| `GET /api/recetas/ingrediente/pasta`<br><br>*(Path parameter: ingredient)* | ```json<br>[<br>  {<br>    "id": "507f1f77bcf86cd799439011",<br>    "title": "Pasta Carbonara Gourmet",<br>    "author": {<br>      "name": "Chef Mario Batali",<br>      "type": "CHEF_JUDGE"<br>    },<br>    "ingredients": [<br>      {<br>        "name": "pasta",<br>        "quantity": "200 gramos",<br>        "unit": "gramos"<br>      }<br>    ],<br>    "steps": [...],<br>    "createdAt": "2023-12-15T10:30:00Z",<br>    "updatedAt": "2023-12-15T10:30:00Z"<br>  }<br>]<br>``` |
+#### Request
+
+```
+GET /api/recetas/ingrediente/pasta
+```
+
+#### Response
+
+```json
+[
+  {
+    "id": "507f1f77bcf86cd799439011",
+    "title": "Pasta Carbonara Gourmet",
+    "author": {
+      "name": "Chef Mario Batali",
+      "type": "CHEF_JUDGE"
+    },
+    "ingredients": [
+      {
+        "name": "pasta",
+        "quantity": "200 gramos",
+        "unit": "gramos"
+      }
+    ],
+    "steps": [...],
+    "createdAt": "2023-12-15T10:30:00Z",
+    "updatedAt": "2023-12-15T10:30:00Z"
+  }
+]
+```
 
 ---
 
 ### 🟡 **PUT /api/recetas/{id}** - Actualizar Receta
 
-| **Request** | **Response** |
-|-------------|--------------|
-| `PUT /api/recetas/507f1f77bcf86cd799439011`<br><br>```json<br>{<br>  "title": "Pasta Carbonara Actualizada",<br>  "author": {<br>    "name": "Chef Mario Batali",<br>    "type": "CHEF_JUDGE"<br>  },<br>  "ingredients": [<br>    {<br>      "name": "pasta integral",<br>      "quantity": "250 gramos",<br>      "unit": "gramos"<br>    }<br>  ],<br>  "steps": [<br>    {<br>      "order": 1,<br>      "description": "Usar pasta integral"<br>    }<br>  ]<br>}<br>``` | ```json<br>{<br>  "id": "507f1f77bcf86cd799439011",<br>  "title": "Pasta Carbonara Actualizada",<br>  "author": {<br>    "name": "Chef Mario Batali",<br>    "type": "CHEF_JUDGE"<br>  },<br>  "ingredients": [...],<br>  "steps": [...],<br>  "createdAt": "2023-12-15T10:30:00Z",<br>  "updatedAt": "2023-12-15T16:45:00Z"<br>}<br>``` |
+#### Request
+
+```
+PUT /api/recetas/507f1f77bcf86cd799439011
+```
+
+```json
+{
+  "title": "Pasta Carbonara Actualizada",
+  "author": {
+    "name": "Chef Mario Batali",
+    "type": "CHEF_JUDGE"
+  },
+  "ingredients": [
+    {
+      "name": "pasta integral",
+      "quantity": "250 gramos",
+      "unit": "gramos"
+    }
+  ],
+  "steps": [
+    {
+      "order": 1,
+      "description": "Usar pasta integral"
+    }
+  ]
+}
+```
+
+#### Response
+
+```json
+{
+  "id": "507f1f77bcf86cd799439011",
+  "title": "Pasta Carbonara Actualizada",
+  "author": {
+    "name": "Chef Mario Batali",
+    "type": "CHEF_JUDGE"
+  },
+  "ingredients": [...],
+  "steps": [...],
+  "createdAt": "2023-12-15T10:30:00Z",
+  "updatedAt": "2023-12-15T16:45:00Z"
+}
+```
 
 ---
 
 ### 🔴 **DELETE /api/recetas/{id}** - Eliminar Receta
 
-| **Request** | **Response** |
-|-------------|--------------|
-| `DELETE /api/recetas/507f1f77bcf86cd799439011`<br><br>*(Path parameter: id)* | **✅ Éxito (204):**<br>*(No Content - Eliminación exitosa)*<br><br>**❌ Error (404):**<br>```json<br>{<br>  "status": 404,<br>  "error": "Not Found",<br>  "message": "No se puede eliminar. Receta no encontrada con ID: ...",<br>  "timestamp": "2023-12-15T17:00:00Z"<br>}<br>``` |
+#### Request
 
+```
+DELETE /api/recetas/507f1f77bcf86cd799439011
+```
+
+#### Response (204 No Content)
+
+*(No Content - Eliminación exitosa)*
+
+#### Response (404 Not Found)
+
+```json
+{
+  "status": 404,
+  "error": "Not Found",
+  "message": "No se puede eliminar. Receta no encontrada con ID: ...",
+  "timestamp": "2023-12-15T17:00:00Z"
+}
+```
 ---
 
 ### 📊 **Códigos de Estado HTTP**
@@ -549,7 +832,7 @@ mvn jacoco:report
 
 ### ✅ **Evidencia de Pruebas logradas**
 
-![Tests Pasando](docs/imagenes/jacoco.png)
+![Tests Pasando](docs/imagenes/jacocoest.png)
 
 ### 📊 **Cobertura con JaCoCo**
 
@@ -557,7 +840,7 @@ mvn jacoco:report
 
 #### **🎯 Métricas de Cobertura**
 
-![Reporte JaCoCo](docs/imagenes/JacocoReporte.png)
+![Reporte JaCoCo](docs/imagenes/jacoco.png)
 
 | 📊 **Métrica** | 🎯 **Objetivo** | ✅ **Alcanzado** | 📈 **Estado** |
 |---------------|----------------|------------------|---------------|
