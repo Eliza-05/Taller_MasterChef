@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RecipeController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Taller_MasterChef</a> &gt; <a href="index.source.html" class="el_package">edu.dosw.taller.controller</a> &gt; <span class="el_source">RecipeController.java</span></div><h1>RecipeController.java</h1><pre class="source lang-java linenums">package edu.dosw.taller.controller;
+
+import edu.dosw.taller.controller.dtos.*;
+import edu.dosw.taller.model.services.RecipeService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+
+@RestController
+@RequestMapping(&quot;/api/recetas&quot;)
+@Tag(name = &quot;Recetas&quot;, description = &quot;API para gestión de recetas de MasterChef&quot;)
+public class RecipeController {
+
+    private RecipeService recipeService;
+
+<span class="fc" id="L23">    public RecipeController(RecipeService recipeService) {</span>
+<span class="fc" id="L24">        this.recipeService = recipeService;</span>
+<span class="fc" id="L25">    }</span>
+
+    @PostMapping(&quot;/televidente&quot;)
+    @Operation(summary = &quot;Crear receta de televidente&quot;, 
+               description = &quot;Crea una nueva receta enviada por un televidente&quot;)
+    @ApiResponse(responseCode = &quot;200&quot;, description = &quot;Receta creada exitosamente&quot;)
+    @ApiResponse(responseCode = &quot;400&quot;, description = &quot;Datos de entrada inválidos&quot;)
+    public ResponseEntity&lt;RecipeResponseDto&gt; createViewerRecipe(
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = &quot;Datos de la receta del televidente&quot;,
+            content = @Content(
+                mediaType = &quot;application/json&quot;,
+                schema = @Schema(implementation = RecipeRequestDto.class),
+                examples = @ExampleObject(
+                    name = &quot;Receta de Televidente&quot;,
+                    summary = &quot;Ejemplo de receta enviada por un televidente&quot;,
+                    value = &quot;&quot;&quot;
+                    {
+                      &quot;title&quot;: &quot;Arepa Venezolana Casera&quot;,
+                      &quot;ingredients&quot;: [
+                        {
+                          &quot;name&quot;: &quot;harina de maíz precocida&quot;,
+                          &quot;quantity&quot;: &quot;2&quot;,
+                          &quot;unit&quot;: &quot;tazas&quot;
+                        },
+                        {
+                          &quot;name&quot;: &quot;agua tibia&quot;,
+                          &quot;quantity&quot;: &quot;2.5&quot;,
+                          &quot;unit&quot;: &quot;tazas&quot;
+                        },
+                        {
+                          &quot;name&quot;: &quot;sal&quot;,
+                          &quot;quantity&quot;: &quot;1&quot;,
+                          &quot;unit&quot;: &quot;cucharadita&quot;
+                        }
+                      ],
+                      &quot;steps&quot;: [
+                        {
+                          &quot;order&quot;: 1,
+                          &quot;description&quot;: &quot;Mezclar la harina con sal en un bowl&quot;
+                        },
+                        {
+                          &quot;order&quot;: 2,
+                          &quot;description&quot;: &quot;Agregar agua tibia poco a poco mientras se mezcla&quot;
+                        },
+                        {
+                          &quot;order&quot;: 3,
+                          &quot;description&quot;: &quot;Amasar hasta obtener una masa suave&quot;
+                        },
+                        {
+                          &quot;order&quot;: 4,
+                          &quot;description&quot;: &quot;Formar bolitas y aplastar para hacer las arepas&quot;
+                        },
+                        {
+                          &quot;order&quot;: 5,
+                          &quot;description&quot;: &quot;Cocinar en plancha por 7 minutos de cada lado&quot;
+                        }
+                      ],
+                      &quot;author&quot;: {
+                        &quot;name&quot;: &quot;María González&quot;,
+                        &quot;type&quot;: &quot;VIEWER&quot;
+                      }
+                    }
+                    &quot;&quot;&quot;
+                )
+            )
+        )
+        @RequestBody RecipeRequestDto dto) {
+<span class="fc" id="L93">        dto.getAuthor().setType(&quot;VIEWER&quot;);</span>
+<span class="fc" id="L94">        return ResponseEntity.ok(recipeService.createRecipe(dto));</span>
+    }
+
+    @PostMapping(&quot;/participante&quot;)
+    @Operation(summary = &quot;Crear receta de participante&quot;, 
+               description = &quot;Crea una nueva receta de un participante del programa&quot;)
+    public ResponseEntity&lt;RecipeResponseDto&gt; createParticipantRecipe(
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = &quot;Datos de la receta del participante&quot;,
+            content = @Content(
+                mediaType = &quot;application/json&quot;,
+                examples = @ExampleObject(
+                    name = &quot;Receta de Participante&quot;,
+                    summary = &quot;Ejemplo de receta de participante&quot;,
+                    value = &quot;&quot;&quot;
+                    {
+                      &quot;title&quot;: &quot;Risotto de Camarones al Vino Blanco&quot;,
+                      &quot;ingredients&quot;: [
+                        {
+                          &quot;name&quot;: &quot;arroz arborio&quot;,
+                          &quot;quantity&quot;: &quot;300&quot;,
+                          &quot;unit&quot;: &quot;gramos&quot;
+                        },
+                        {
+                          &quot;name&quot;: &quot;camarones frescos&quot;,
+                          &quot;quantity&quot;: &quot;500&quot;,
+                          &quot;unit&quot;: &quot;gramos&quot;
+                        },
+                        {
+                          &quot;name&quot;: &quot;vino blanco&quot;,
+                          &quot;quantity&quot;: &quot;200&quot;,
+                          &quot;unit&quot;: &quot;ml&quot;
+                        },
+                        {
+                          &quot;name&quot;: &quot;caldo de pescado&quot;,
+                          &quot;quantity&quot;: &quot;1&quot;,
+                          &quot;unit&quot;: &quot;litro&quot;
+                        },
+                        {
+                          &quot;name&quot;: &quot;queso parmesano&quot;,
+                          &quot;quantity&quot;: &quot;100&quot;,
+                          &quot;unit&quot;: &quot;gramos&quot;
+                        }
+                      ],
+                      &quot;steps&quot;: [
+                        {
+                          &quot;order&quot;: 1,
+                          &quot;description&quot;: &quot;Limpiar y pelar los camarones, reservar las cáscaras para el caldo&quot;
+                        },
+                        {
+                          &quot;order&quot;: 2,
+                          &quot;description&quot;: &quot;Sofreír el arroz con aceite de oliva hasta que esté transparente&quot;
+                        },
+                        {
+                          &quot;order&quot;: 3,
+                          &quot;description&quot;: &quot;Agregar el vino blanco y cocinar hasta que se evapore&quot;
+                        },
+                        {
+                          &quot;order&quot;: 4,
+                          &quot;description&quot;: &quot;Añadir el caldo caliente de a poco, revolviendo constantemente&quot;
+                        },
+                        {
+                          &quot;order&quot;: 5,
+                          &quot;description&quot;: &quot;A los 15 minutos agregar los camarones&quot;
+                        },
+                        {
+                          &quot;order&quot;: 6,
+                          &quot;description&quot;: &quot;Terminar con queso parmesano y mantequilla&quot;
+                        }
+                      ],
+                      &quot;author&quot;: {
+                        &quot;name&quot;: &quot;Carlos Mendoza&quot;,
+                        &quot;type&quot;: &quot;PARTICIPANT&quot;
+                      },
+                      &quot;season&quot;: 5
+                    }
+                    &quot;&quot;&quot;
+                )
+            )
+        )
+        @RequestBody RecipeRequestDto dto) {
+<span class="fc" id="L175">        dto.getAuthor().setType(&quot;PARTICIPANT&quot;);</span>
+<span class="fc" id="L176">        return ResponseEntity.ok(recipeService.createRecipe(dto));</span>
+    }
+
+    @PostMapping(&quot;/chef&quot;)
+    @Operation(summary = &quot;Crear receta de chef&quot;, 
+               description = &quot;Crea una nueva receta creada por un chef juez&quot;)
+    public ResponseEntity&lt;RecipeResponseDto&gt; createChefRecipe(
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = &quot;Datos de la receta del chef&quot;,
+            content = @Content(
+                mediaType = &quot;application/json&quot;,
+                examples = @ExampleObject(
+                    name = &quot;Receta de Chef&quot;,
+                    summary = &quot;Ejemplo de receta de chef profesional&quot;,
+                    value = &quot;&quot;&quot;
+                    {
+                      &quot;title&quot;: &quot;Pasta Carbonara Auténtica&quot;,
+                      &quot;ingredients&quot;: [
+                        {
+                          &quot;name&quot;: &quot;spaghetti&quot;,
+                          &quot;quantity&quot;: &quot;400&quot;,
+                          &quot;unit&quot;: &quot;gramos&quot;
+                        },
+                        {
+                          &quot;name&quot;: &quot;panceta italiana&quot;,
+                          &quot;quantity&quot;: &quot;150&quot;,
+                          &quot;unit&quot;: &quot;gramos&quot;
+                        },
+                        {
+                          &quot;name&quot;: &quot;huevos&quot;,
+                          &quot;quantity&quot;: &quot;4&quot;,
+                          &quot;unit&quot;: &quot;unidades&quot;
+                        },
+                        {
+                          &quot;name&quot;: &quot;queso pecorino romano&quot;,
+                          &quot;quantity&quot;: &quot;100&quot;,
+                          &quot;unit&quot;: &quot;gramos&quot;
+                        },
+                        {
+                          &quot;name&quot;: &quot;pimienta negra&quot;,
+                          &quot;quantity&quot;: &quot;1&quot;,
+                          &quot;unit&quot;: &quot;cucharadita&quot;
+                        }
+                      ],
+                      &quot;steps&quot;: [
+                        {
+                          &quot;order&quot;: 1,
+                          &quot;description&quot;: &quot;Hervir agua con sal abundante para la pasta&quot;
+                        },
+                        {
+                          &quot;order&quot;: 2,
+                          &quot;description&quot;: &quot;Cortar la panceta en cubitos y dorar en sartén sin aceite&quot;
+                        },
+                        {
+                          &quot;order&quot;: 3,
+                          &quot;description&quot;: &quot;Batir huevos con queso pecorino y pimienta&quot;
+                        },
+                        {
+                          &quot;order&quot;: 4,
+                          &quot;description&quot;: &quot;Cocinar spaghetti al dente según instrucciones del paquete&quot;
+                        },
+                        {
+                          &quot;order&quot;: 5,
+                          &quot;description&quot;: &quot;Escurrir pasta reservando 1 taza del agua de cocción&quot;
+                        },
+                        {
+                          &quot;order&quot;: 6,
+                          &quot;description&quot;: &quot;Mezclar pasta caliente con panceta fuera del fuego&quot;
+                        },
+                        {
+                          &quot;order&quot;: 7,
+                          &quot;description&quot;: &quot;Agregar mezcla de huevos removiendo rápidamente para crear crema&quot;
+                        },
+                        {
+                          &quot;order&quot;: 8,
+                          &quot;description&quot;: &quot;Ajustar consistencia con agua de pasta si es necesario&quot;
+                        }
+                      ],
+                      &quot;author&quot;: {
+                        &quot;name&quot;: &quot;Chef Alessandro Borghese&quot;,
+                        &quot;type&quot;: &quot;CHEF_JUDGE&quot;
+                      }
+                    }
+                    &quot;&quot;&quot;
+                )
+            )
+        )
+        @RequestBody RecipeRequestDto dto) {
+<span class="fc" id="L264">        dto.getAuthor().setType(&quot;CHEF_JUDGE&quot;);</span>
+<span class="fc" id="L265">        return ResponseEntity.ok(recipeService.createRecipe(dto));</span>
+    }
+
+    @GetMapping
+    @Operation(summary = &quot;Obtener todas las recetas&quot;, 
+               description = &quot;Retorna una lista con todas las recetas disponibles&quot;)
+    public ResponseEntity&lt;List&lt;RecipeResponseDto&gt;&gt; getAllRecipes() {
+<span class="fc" id="L272">        return ResponseEntity.ok(recipeService.searchAllRecipes());</span>
+    }
+
+    @GetMapping(&quot;/{id}&quot;)
+    @Operation(summary = &quot;Obtener receta por ID&quot;, 
+               description = &quot;Retorna una receta específica usando su identificador&quot;)
+    public ResponseEntity&lt;RecipeResponseDto&gt; getRecipeById(
+        @Parameter(description = &quot;ID único de la receta&quot;, example = &quot;507f1f77bcf86cd799439011&quot;)
+        @PathVariable String id) {
+<span class="fc" id="L281">        return ResponseEntity.ok(recipeService.searchRecipeById(id));</span>
+    }
+
+    @GetMapping(&quot;/participantes&quot;)
+    @Operation(summary = &quot;Obtener recetas de participantes&quot;, 
+               description = &quot;Retorna todas las recetas creadas por participantes del programa&quot;)
+    public ResponseEntity&lt;List&lt;RecipeResponseDto&gt;&gt; getParticipantRecipes() {
+<span class="fc" id="L288">        return ResponseEntity.ok(recipeService.searchRecipesByAuthorType(&quot;PARTICIPANT&quot;));</span>
+    }
+
+    @GetMapping(&quot;/televidentes&quot;)
+    @Operation(summary = &quot;Obtener recetas de televidentes&quot;, 
+               description = &quot;Retorna todas las recetas enviadas por televidentes&quot;)
+    public ResponseEntity&lt;List&lt;RecipeResponseDto&gt;&gt; getViewerRecipes() {
+<span class="fc" id="L295">        return ResponseEntity.ok(recipeService.searchRecipesByAuthorType(&quot;VIEWER&quot;));</span>
+    }
+
+    @GetMapping(&quot;/chefs&quot;)
+    @Operation(summary = &quot;Obtener recetas de chefs&quot;, 
+               description = &quot;Retorna todas las recetas creadas por chefs jueces&quot;)
+    public ResponseEntity&lt;List&lt;RecipeResponseDto&gt;&gt; getChefRecipes() {
+<span class="fc" id="L302">        return ResponseEntity.ok(recipeService.searchRecipesByAuthorType(&quot;CHEF_JUDGE&quot;));</span>
+    }
+
+    @GetMapping(&quot;/temporada/{season}&quot;)
+    @Operation(summary = &quot;Obtener recetas por temporada&quot;, 
+               description = &quot;Retorna todas las recetas de una temporada específica&quot;)
+    public ResponseEntity&lt;List&lt;RecipeResponseDto&gt;&gt; getRecipesBySeason(
+        @Parameter(description = &quot;Número de la temporada&quot;, example = &quot;5&quot;)
+        @PathVariable Integer season) {
+<span class="fc" id="L311">        return ResponseEntity.ok(recipeService.searchRecipesBySeason(season));</span>
+    }
+
+    @GetMapping(&quot;/ingrediente/{ingredient}&quot;)
+    @Operation(summary = &quot;Buscar recetas por ingrediente&quot;, 
+               description = &quot;Retorna recetas que contienen el ingrediente especificado&quot;)
+    public ResponseEntity&lt;List&lt;RecipeResponseDto&gt;&gt; getRecipesByIngredient(
+        @Parameter(description = &quot;Nombre del ingrediente a buscar&quot;, example = &quot;pasta&quot;)
+        @PathVariable String ingredient) {
+<span class="fc" id="L320">        return ResponseEntity.ok(recipeService.searchRecipesByIngredient(ingredient));</span>
+    }
+
+    @DeleteMapping(&quot;/{id}&quot;)
+    @Operation(summary = &quot;Eliminar receta&quot;, 
+               description = &quot;Elimina una receta específica usando su identificador&quot;)
+    @ApiResponse(responseCode = &quot;204&quot;, description = &quot;Receta eliminada exitosamente&quot;)
+    @ApiResponse(responseCode = &quot;404&quot;, description = &quot;Receta no encontrada&quot;)
+    public ResponseEntity&lt;Void&gt; deleteRecipe(
+        @Parameter(description = &quot;ID único de la receta a eliminar&quot;, example = &quot;507f1f77bcf86cd799439011&quot;)
+        @PathVariable String id) {
+<span class="fc" id="L331">        recipeService.deleteRecipe(id);</span>
+<span class="fc" id="L332">        return ResponseEntity.noContent().build();</span>
+    }
+
+    @PutMapping(&quot;/{id}&quot;)
+    @Operation(summary = &quot;Actualizar receta&quot;, 
+               description = &quot;Actualiza una receta existente con nuevos datos&quot;)
+    public ResponseEntity&lt;RecipeResponseDto&gt; updateRecipe(
+        @Parameter(description = &quot;ID único de la receta a actualizar&quot;, example = &quot;507f1f77bcf86cd799439011&quot;)
+        @PathVariable String id,
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = &quot;Nuevos datos para la receta&quot;,
+            content = @Content(
+                mediaType = &quot;application/json&quot;,
+                examples = @ExampleObject(
+                    name = &quot;Actualizar Receta&quot;,
+                    summary = &quot;Ejemplo de actualización de receta&quot;,
+                    value = &quot;&quot;&quot;
+                    {
+                      &quot;title&quot;: &quot;Pasta Carbonara Mejorada&quot;,
+                      &quot;ingredients&quot;: [
+                        {
+                          &quot;name&quot;: &quot;spaghetti&quot;,
+                          &quot;quantity&quot;: &quot;400&quot;,
+                          &quot;unit&quot;: &quot;gramos&quot;
+                        },
+                        {
+                          &quot;name&quot;: &quot;panceta ahumada&quot;,
+                          &quot;quantity&quot;: &quot;200&quot;,
+                          &quot;unit&quot;: &quot;gramos&quot;
+                        },
+                        {
+                          &quot;name&quot;: &quot;huevos orgánicos&quot;,
+                          &quot;quantity&quot;: &quot;5&quot;,
+                          &quot;unit&quot;: &quot;unidades&quot;
+                        },
+                        {
+                          &quot;name&quot;: &quot;queso pecorino romano&quot;,
+                          &quot;quantity&quot;: &quot;120&quot;,
+                          &quot;unit&quot;: &quot;gramos&quot;
+                        }
+                      ],
+                      &quot;steps&quot;: [
+                        {
+                          &quot;order&quot;: 1,
+                          &quot;description&quot;: &quot;Preparar agua con sal para la pasta&quot;
+                        },
+                        {
+                          &quot;order&quot;: 2,
+                          &quot;description&quot;: &quot;Dorar la panceta hasta que esté crujiente&quot;
+                        },
+                        {
+                          &quot;order&quot;: 3,
+                          &quot;description&quot;: &quot;Mezclar huevos con queso rallado&quot;
+                        },
+                        {
+                          &quot;order&quot;: 4,
+                          &quot;description&quot;: &quot;Cocinar pasta al dente&quot;
+                        },
+                        {
+                          &quot;order&quot;: 5,
+                          &quot;description&quot;: &quot;Combinar todo fuera del fuego para crear la salsa cremosa&quot;
+                        }
+                      ],
+                      &quot;author&quot;: {
+                        &quot;name&quot;: &quot;Chef Alessandro Borghese&quot;,
+                        &quot;type&quot;: &quot;CHEF_JUDGE&quot;
+                      }
+                    }
+                    &quot;&quot;&quot;
+                )
+            )
+        )
+        @RequestBody RecipeRequestDto dto) {
+<span class="fc" id="L405">        return ResponseEntity.ok(recipeService.updateRecipe(id, dto));</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
