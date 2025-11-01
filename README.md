@@ -37,11 +37,11 @@
 
 | 📌 **Sección Principal** | 🔗 **Enlace Directo** | 📌 **Sección Principal** | 🔗 **Enlace Directo** |
 |-------------------------|----------------------|-------------------------|----------------------|
-| 👩‍💻 **Descripción** | [Ver](#1️⃣-👩‍💻-descripción-del-proyecto) | 🌐 **API en Azure** | [Ver](#5️⃣-🌐-api-desplegada-en-azure) |
-| ⚙️ **Tecnologías** | [Ver](#2️⃣-⚙️-tecnologías-utilizadas) | 📘 **Endpoints** | [Ver](#6️⃣-📘-endpoints-request--response) |
-| 🧩 **Estructura** | [Ver](#3️⃣-🧩-estructura-del-proyecto) | 🧪 **Testing** | [Ver](#7️⃣-🧪-testing-y-calidad) |
-| 🚀 **Instalación Local** | [Ver](#4️⃣-🚀-instalación-y-ejecución-local) | ☁️ **CI/CD Azure** | [Ver](#8️⃣-☁️-despliegue-y-cicd-en-azure) |
-| 🤝 **Autor** | [Ver](#9️⃣-🤝-autor-y-créditos) | | |
+| 👩‍💻 **Descripción** | [Ver](#descripción-del-proyecto) | 🌐 **API en Azure** | [Ver](#api-desplegada-en-azure) |
+| ⚙️ **Tecnologías** | [Ver](#tecnologías-utilizadas) | 📘 **Endpoints** | [Ver](#endpoints-request--response) |
+| 🧩 **Estructura** | [Ver](#estructura-del-proyecto) | 🧪 **Testing** | [Ver](#testing-y-calidad) |
+| 🚀 **Instalación Local** | [Ver](#instalación-y-ejecución-local) | ☁️ **CI/CD Azure** | [Ver](#despliegue-y-cicd-en-azure) |
+| 🤝 **Autor** | [Ver](#autor-y-créditos) | | |
 
 </div>
 
@@ -65,7 +65,7 @@
 
 ---
 
-## 1️⃣ 👩‍💻 Descripción del Proyecto
+## Descripción del Proyecto
 
 **Taller MasterChef** es un backend que expone una API REST para administrar recetas de cocina.
 
@@ -179,7 +179,7 @@ Este proyecto demuestra:
 
 ---
 
-## 2️⃣ ⚙️ Tecnologías Utilizadas
+## Tecnologías Utilizadas
 
 | Tecnología / Herramienta | Uso en el proyecto |
 |---------------------------|--------------------|
@@ -200,7 +200,7 @@ Este proyecto demuestra:
 
 ---
 
-## 3️⃣ 🧩 Estructura del Proyecto
+## Estructura del Proyecto
 
 ### 🏗️ Arquitectura General
 
@@ -241,7 +241,7 @@ Este proyecto demuestra:
 
 ---
 
-## 4️⃣ 🚀 Instalación y Ejecución Local
+## Instalación y Ejecución Local
 
 > 💡 **Para ejecutar esta API localmente**, seguir estos pasos paso a paso.
 
@@ -407,7 +407,7 @@ mvn jacoco:report
 
 ---
 
-## 5️⃣ 🌐 API Desplegada en Azure
+## API Desplegada en Azure
 
 > 🚀 **¡La API ya está funcionando en la nube!** 
 
@@ -419,7 +419,7 @@ mvn jacoco:report
 
 ---
 
-## 6️⃣ 📘 Endpoints (Request / Response)
+## Endpoints (Request / Response)
 
 > 📊 **Documentación completa de todos los endpoints disponibles en la API**
 
@@ -819,7 +819,7 @@ DELETE /api/recetas/507f1f77bcf86cd799439011
 
 ---
 
-## 7️⃣ 🧪 Testing y Calidad
+## Testing y Calidad
 
 > 🎯 **Garantizando la calidad del código** mediante pruebas automatizadas y análisis de cobertura.
 
@@ -832,7 +832,7 @@ DELETE /api/recetas/507f1f77bcf86cd799439011
 
 ### ✅ **Evidencia de Pruebas logradas**
 
-![Tests Pasando](docs/imagenes/jacocoest.png)
+![Tests Pasando](docs/imagenes/jacocoTest.png)
 
 ### 📊 **Cobertura con JaCoCo**
 
@@ -853,23 +853,7 @@ DELETE /api/recetas/507f1f77bcf86cd799439011
 
 ---
 
-### 🔍 **Análisis de Calidad con SonarQube**
-
-![SonarQube Análisis](docs/imagenes/SonarQubeReporte.png)
-
-| 🏆 **Métrica** | 📊 **Resultado** | 🎯 **Calificación** |
-|---------------|------------------|-------------------|
-| **🐛 Bugs** | 0 | ✅ A |
-| **🔒 Vulnerabilidades** | 0 | ✅ A |
-| **👃 Code Smells** | 2 | ✅ A |
-| **📊 Cobertura** | 85.2% | ✅ A |
-| **🔄 Duplicación** | 0.0% | ✅ A |
-
-> 🎉 **Quality Gate:** ✅ **PASSED** - El código cumple con todos los estándares de calidad.
-
----
-
-## 8️⃣ ☁️ Despliegue y CI/CD en Azure
+## Despliegue y CI/CD en Azure
 
 > 🚀 **Despliegue automatizado** usando GitHub Actions + Azure App Service con contenedores Docker.
 
@@ -904,7 +888,7 @@ graph LR
 ### ✅ **Evidencia de Despliegue Exitoso**
 
 #### **🔄 GitHub Actions - Pipeline Exitoso**
-![GitHub Actions Success](docs/imagenes/GitHubActionsPipeline.png)
+![GitHub Actions Success](docs/imagenes/GitHubActionsPipeline1.png)
 
 #### **☁️ Azure App Service - Aplicación Desplegada**
 ![Azure App Service](docs/imagenes/AzureAppService.png)
@@ -934,7 +918,7 @@ graph LR
 
 ---
 
-## 9️⃣ 🤝 Autor y Créditos
+## Autor y Créditos
 
 ### 👩‍💻 **Desarrollado por:**
 
